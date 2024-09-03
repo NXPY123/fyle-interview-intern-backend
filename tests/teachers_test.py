@@ -1,7 +1,8 @@
 def test_get_assignments_teacher_1(client, h_teacher_1):
     response = client.get(
         '/teacher/assignments',
-        headers=h_teacher_1
+        headers=h_teacher_1,
+        query_string={'teacher_id': 1}
     )
 
     assert response.status_code == 200
@@ -14,7 +15,8 @@ def test_get_assignments_teacher_1(client, h_teacher_1):
 def test_get_assignments_teacher_2(client, h_teacher_2):
     response = client.get(
         '/teacher/assignments',
-        headers=h_teacher_2
+        headers=h_teacher_2,
+        query_string={'teacher_id': 2}
     )
 
     assert response.status_code == 200
