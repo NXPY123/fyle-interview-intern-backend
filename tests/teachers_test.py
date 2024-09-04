@@ -1,3 +1,6 @@
+from core import db
+from sqlalchemy import text
+
 def test_get_assignments_teacher_1(client, h_teacher_1):
     response = client.get(
         '/teacher/assignments',
@@ -101,3 +104,50 @@ def test_grade_assignment_draft_assignment(client, h_teacher_1):
     data = response.json
 
     assert data['error'] == 'FyleError'
+
+def test_grade_assignment_invalid_teacher(client, h_teacher_2):
+    response = client.post(
+        '/teacher/assignments/grade',
+        headers=h_teacher_2,
+        json={
+            "id": 1,
+            "grade": "A"
+        }
+    )
+
+    assert response.status_code == 400
+
+def test_get_assignments_no_assignments(client, h_teacher_1):
+    response = client.get(
+        '/teacher/assignments',
+        headers=h_teacher_1,
+        query_string={'teacher_id': 5}
+    )
+
+    assert response.status_code == 200
+    data = response.json['data']
+    assert len(data) == 0  # Assuming teacher 1 has no assignments
+
+def test_grade_assignment_success(client, h_teacher_1):
+
+    h_teacher_6 = {
+        'X-Principal': '{"teacher_id": 6, "user_id": 6}'
+    }
+    response = client.post(
+        '/teacher/assignments/grade',
+        headers=h_teacher_6,
+        json={
+            "id": 900,
+            "grade": "B"
+        }
+    )
+
+    assert response.status_code == 200
+    data = response.json['data']
+    assert data['grade'] == 'B'
+
+    # Set grade to NULL and state to SUBMITTED
+    db.engine.execute(text("UPDATE assignments SET grade = NULL, state = 'SUBMITTED' WHERE id = 900"))
+    db.session.commit()
+
+    
