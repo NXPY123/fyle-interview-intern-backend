@@ -39,11 +39,6 @@ def test_post_assignment_student(client, h_student_1):
         json={"content": content, "teacher_id": 1},
     )
 
-    # Remove the assignment created in this test
-    db.engine.execute(
-        text("DELETE FROM assignments WHERE id = :id"),
-        {"id": response.json["data"]["id"]},
-    )
     assert response.status_code == 200
 
     data = response.json["data"]
@@ -64,12 +59,6 @@ def test_submit_assignment_student_2(client, h_student_2):
         json={"id": 4, "teacher_id": 2},
     )
 
-    # Change the state back to DRAFT
-    db.engine.execute(
-        text("UPDATE assignments SET state = :state WHERE id = :id"),
-        {"state": "DRAFT", "id": 4},
-    )
-    db.session.commit()
     assert response.status_code == 200
 
     data = response.json["data"]
@@ -135,13 +124,6 @@ def test_edit_assignment(client, h_student_2):
         text("SELECT content FROM assignments WHERE id = :id"), {"id": 3}
     ).fetchone()[0]
 
-    # Revert the content back
-    db.engine.execute(
-        text("UPDATE assignments SET content = :content WHERE id = :id"),
-        {"content": "ESSAY T2", "id": 3},
-    )
-    db.session.commit()
-
     assert response.status_code == 200
 
     data = response.json["data"]
@@ -175,20 +157,9 @@ def test_get_assignments_no_assignments_student_1(client, h_student_1):
         },
     )
 
-    """
-    headers = {
-        'X-Principal': json.dumps({
-            'student_id': 4,
-            'user_id': 7
-        })
-    }
-    """
     header = {"X-Principal": json.dumps({"student_id": 4, "user_id": 7})}
 
     response = client.get("/student/assignments", headers=header)
-
-    db.engine.execute(text("DELETE FROM students WHERE id = :id"), {"id": 4})
-    db.engine.execute(text("DELETE FROM users WHERE id = :id"), {"id": 7})
 
     assert response.status_code == 200
     data = response.json["data"]

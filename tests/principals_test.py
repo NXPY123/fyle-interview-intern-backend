@@ -56,9 +56,6 @@ def test_grade_assignment(client, h_principal, h_student_2, h_teacher_2):
         headers=h_principal,
     )
 
-    Assignment.query.filter_by(id=4).update({"state": AssignmentStateEnum.DRAFT})
-    db.session.commit()
-
     assert response.status_code == 200
 
 
@@ -81,8 +78,6 @@ def test_grade_assignment_submitted(client, h_principal):
         json={"id": 3, "grade": GradeEnum.A.value},
         headers=h_principal,
     )
-
-    Assignment.query.filter_by(id=3).update({"state": AssignmentStateEnum.DRAFT})
 
     assert response.status_code == 400
 

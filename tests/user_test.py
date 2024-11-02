@@ -17,10 +17,6 @@ def test_create_user():
     assert user.username == "test256"
     assert user.email == "test256@gmail.com"
 
-    # Remove the user from the database
-    db.session.delete(user)
-    db.session.commit()
-
 
 def test_filter_user():
     criterion = User.id == 1

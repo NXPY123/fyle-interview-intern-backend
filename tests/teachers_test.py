@@ -99,11 +99,6 @@ def test_grade_assignment_success(client, h_teacher_2, h_student_2):
         "/teacher/assignments/grade", headers=h_teacher_2, json={"id": 3, "grade": "B"}
     )
 
-    db.engine.execute(
-        text("UPDATE assignments SET grade = NULL, state = 'DRAFT' WHERE id = 3")
-    )
-    db.session.commit()
-
     assert response.status_code == 200
     data = response.json["data"]
     assert data["grade"] == "B"
