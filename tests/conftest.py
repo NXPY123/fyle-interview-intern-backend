@@ -1,6 +1,8 @@
 import pytest
 import json
 from tests import app
+from flask_migrate import upgrade
+import os
 
 
 @pytest.fixture(scope="function")
@@ -9,6 +11,19 @@ def client():
 
     with app.test_client() as client:
         yield client
+
+
+@pytest.fixture(scope="function", autouse=True)
+def setup():
+    if os.path.exists("core/store.sqlite3"):
+        os.remove("core/store.sqlite3")
+
+    with app.app_context():
+
+        # Run migrations to create a fresh schema
+        upgrade(directory="core/migrations")
+
+        yield
 
 
 @pytest.fixture
