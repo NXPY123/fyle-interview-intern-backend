@@ -8,7 +8,7 @@ def client():
     """A test client for making requests in tests."""
 
     with app.test_client() as client:
-        yield client  # Provide the test client to the tests
+        yield client
 
 
 @pytest.fixture

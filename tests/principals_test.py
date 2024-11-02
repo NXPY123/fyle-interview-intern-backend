@@ -22,7 +22,7 @@ def test_grade_assignment_draft_assignment(client, h_principal):
     """
     failure case: If an assignment is in Draft state, it cannot be graded by principal
     """
-    # Make the assignment draft
+
     Assignment.query.filter_by(id=5).update({"state": AssignmentStateEnum.DRAFT})
     db.session.commit()
 
@@ -56,7 +56,6 @@ def test_grade_assignment(client, h_principal, h_student_2, h_teacher_2):
         headers=h_principal,
     )
 
-    # Set the assignment to draft state
     Assignment.query.filter_by(id=4).update({"state": AssignmentStateEnum.DRAFT})
     db.session.commit()
 
@@ -73,7 +72,7 @@ def test_grade_assignment_submitted(client, h_principal):
     """
     failure case: If an assignment is in Submitted state, it cannot be graded by principal
     """
-    # Set the assignment to submitted state
+
     Assignment.query.filter_by(id=3).update({"state": AssignmentStateEnum.SUBMITTED})
     db.session.commit()
 
@@ -83,7 +82,6 @@ def test_grade_assignment_submitted(client, h_principal):
         headers=h_principal,
     )
 
-    # Set the assignment to draft state
     Assignment.query.filter_by(id=3).update({"state": AssignmentStateEnum.DRAFT})
 
     assert response.status_code == 400

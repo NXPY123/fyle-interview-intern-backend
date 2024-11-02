@@ -5,7 +5,6 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlite3 import Connection as SQLite3Connection
 
-# Move this to config.py
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./store.sqlite3"
 app.config["SQLALCHEMY_ECHO"] = False

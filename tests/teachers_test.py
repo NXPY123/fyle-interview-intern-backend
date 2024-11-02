@@ -108,11 +108,9 @@ def test_grade_assignment_success(client, h_teacher_2, h_student_2):
     data = response.json["data"]
     assert data["grade"] == "B"
 
-    # Set grade to NULL and state to SUBMITTED
     db.engine.execute(
         text("UPDATE assignments SET grade = NULL, state = 'SUBMITTED' WHERE id = 900")
     )
-    # db.session.commit()
 
 
 def test_teacher_model(client):

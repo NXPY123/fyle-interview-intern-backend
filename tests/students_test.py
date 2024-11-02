@@ -15,19 +15,6 @@ def test_get_assignments_student_1(client, h_student_1):
         assert assignment["student_id"] == 1
 
 
-# def test_get_assignments_student_2(client, h_student_2):
-#     response = client.get(
-#         '/student/assignments',
-#         headers=h_student_2
-#     )
-
-#     assert response.status_code == 200
-
-#     data = response.json['data']
-#     for assignment in data:
-#         assert assignment['student_id'] == 2
-
-
 def test_post_assignment_null_content(client, h_student_1):
     """
     failure case: content cannot be null
@@ -70,7 +57,6 @@ def test_submit_assignment_student_2(client, h_student_2):
         text("UPDATE assignments SET state = :state WHERE id = :id"),
         {"state": "DRAFT", "id": 4},
     )
-    # db.session.commit()
 
     response = client.post(
         "/student/assignments/submit",
@@ -134,6 +120,7 @@ def test_submit_graded_assignment(client, h_student_1):
 def test_edit_assignment(client, h_student_2):
 
     content = "ABCD TESTEDIT"
+
     # Ensure the assignment is in DRAFT state
     db.engine.execute(
         text("UPDATE assignments SET state = :state WHERE id = :id"),
@@ -148,7 +135,7 @@ def test_edit_assignment(client, h_student_2):
         text("SELECT content FROM assignments WHERE id = :id"), {"id": 3}
     ).fetchone()[0]
 
-    # Revert the content back to ESSAY T2
+    # Revert the content back
     db.engine.execute(
         text("UPDATE assignments SET content = :content WHERE id = :id"),
         {"content": "ESSAY T2", "id": 3},
@@ -200,10 +187,7 @@ def test_get_assignments_no_assignments_student_1(client, h_student_1):
 
     response = client.get("/student/assignments", headers=header)
 
-    # Remove the student created in this test
     db.engine.execute(text("DELETE FROM students WHERE id = :id"), {"id": 4})
-
-    # Remove the user created in this test
     db.engine.execute(text("DELETE FROM users WHERE id = :id"), {"id": 7})
 
     assert response.status_code == 200
