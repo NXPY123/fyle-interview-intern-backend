@@ -14,19 +14,6 @@ migrate = Migrate(app, db)
 app.test_client()
 
 
-def create_app(config_class="core.config.Config"):
-    app = Flask(__name__)
-    app.config.from_object(config_class)
-
-    db.init_app(app)
-    migrate.init_app(app, db)
-
-    with app.app_context():
-        db.create_all()
-
-    return app
-
-
 # this is to enforce fk (not done by default in sqlite3)
 @event.listens_for(Engine, "connect")
 def _set_sqlite_pragma(dbapi_connection, connection_record):
