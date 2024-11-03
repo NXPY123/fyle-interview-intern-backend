@@ -4,7 +4,7 @@ import json
 from core.models.students import Student
 
 
-def test_get_assignments_student_1(client, h_student_1):
+def test_get_assignments_student(client, h_student_1):
 
     response = client.get("/student/assignments", headers=h_student_1)
 
@@ -45,13 +45,7 @@ def test_post_assignment_student(client, h_student_1):
     assert data["content"] == content
 
 
-def test_submit_assignment_student_2(client, h_student_2):
-
-    # If assignment already exists, set it to DRAFT
-    db.engine.execute(
-        text("UPDATE assignments SET state = :state WHERE id = :id"),
-        {"state": "DRAFT", "id": 4},
-    )
+def test_submit_assignment_student(client, h_student_2):
 
     response = client.post(
         "/student/assignments/submit",
@@ -68,6 +62,9 @@ def test_submit_assignment_student_2(client, h_student_2):
 
 
 def test_assignment_resubmit_error(client, h_student_2):
+    """
+    failure case: Assignment has already been submitted
+    """
 
     response = client.post(
         "/student/assignments/submit",
@@ -81,6 +78,9 @@ def test_assignment_resubmit_error(client, h_student_2):
 
 
 def test_submit_assignment_invalid_student(client, h_student_1):
+    """
+    failure case: This assignment belongs to some other student
+    """
 
     response = client.post(
         "/student/assignments/submit",
@@ -107,15 +107,12 @@ def test_submit_graded_assignment(client, h_student_1):
 
 
 def test_edit_assignment(client, h_student_2):
+    """
+    Edit an existing assignment
+    """
 
     content = "ABCD TESTEDIT"
 
-    # Ensure the assignment is in DRAFT state
-    db.engine.execute(
-        text("UPDATE assignments SET state = :state WHERE id = :id"),
-        {"state": "DRAFT", "id": 3},
-    )
-    db.session.commit()
     response = client.post(
         "/student/assignments", headers=h_student_2, json={"id": 3, "content": content}
     )
@@ -131,6 +128,9 @@ def test_edit_assignment(client, h_student_2):
 
 
 def test_get_assignments_no_assignments_student_1(client, h_student_1):
+    """
+    Returns an empty list of assignments
+    """
 
     db.engine.execute(
         text(
@@ -167,6 +167,9 @@ def test_get_assignments_no_assignments_student_1(client, h_student_1):
 
 
 def test_submit_assignment_invalid_teacher(client, h_student_2):
+    """
+    failure case: Teacher not found
+    """
 
     response = client.post(
         "/student/assignments/submit",
@@ -179,6 +182,9 @@ def test_submit_assignment_invalid_teacher(client, h_student_2):
 
 
 def test_edit_nonexistent_assignment(client, h_student_1):
+    """
+    failure case: Assignment not found
+    """
 
     response = client.post(
         "/student/assignments",
@@ -194,6 +200,9 @@ def test_edit_nonexistent_assignment(client, h_student_1):
 
 
 def test_upsert_assignment_nonexistent_teacher(client, h_student_1):
+    """
+    failure case: Teacher not found
+    """
 
     response = client.post(
         "/student/assignments",
@@ -210,6 +219,9 @@ def test_upsert_assignment_nonexistent_teacher(client, h_student_1):
 
 
 def test_upsert_assignment_no_teacher(client, h_student_1):
+    """
+    failure case: teacher_id is required
+    """
 
     response = client.post(
         "/student/assignments", headers=h_student_1, json={"content": "New Content"}

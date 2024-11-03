@@ -78,6 +78,9 @@ def test_grade_assignment_draft_assignment(client, h_teacher_1):
 
 
 def test_grade_assignment_invalid_teacher(client, h_teacher_2):
+    """
+    failure case: Teacher 2 cannot grade assignment not belonging to them
+    """
 
     response = client.post(
         "/teacher/assignments/grade", headers=h_teacher_2, json={"id": 1, "grade": "A"}
@@ -88,7 +91,6 @@ def test_grade_assignment_invalid_teacher(client, h_teacher_2):
 
 def test_grade_assignment_success(client, h_teacher_2, h_student_2):
 
-    # Submit an assignment
     response = client.post(
         "/student/assignments/submit",
         headers=h_student_2,
@@ -108,18 +110,10 @@ def test_grade_assignment_success(client, h_teacher_2, h_student_2):
     )
 
 
-def test_teacher_model(client):
-    teachers = Teacher.get_all()
-    assert len(teachers) == 2
-
-    teacher = teachers[0]
-    assert teacher.id == 1
-    assert teacher.user_id == 3
-    assert isinstance(teacher.created_at, datetime.datetime)
-    assert isinstance(teacher.updated_at, datetime.datetime)
-
-
 def test_grade_assignment_invalid_request_body(client, h_teacher_2):
+    """
+    failure case: Missing data for required field
+    """
     response = client.post(
         "/teacher/assignments/grade", headers=h_teacher_2, json={"student_id": 1}
     )
@@ -131,3 +125,15 @@ def test_grade_assignment_invalid_request_body(client, h_teacher_2):
 def test_teacher_model_repr(client):
     teacher = Teacher.query.get(1)
     assert teacher.__repr__() == "<Teacher 1>"
+
+
+def test_teacher_model(client):
+
+    teachers = Teacher.get_all()
+    assert len(teachers) == 2
+
+    teacher = teachers[0]
+    assert teacher.id == 1
+    assert teacher.user_id == 3
+    assert isinstance(teacher.created_at, datetime.datetime)
+    assert isinstance(teacher.updated_at, datetime.datetime)
