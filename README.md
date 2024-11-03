@@ -107,6 +107,8 @@ docker rm fyle-intern-backend-container
 
 # API Documentation
 
+Postman Collection: [Public Workspace Collection](https://elements.getpostman.com/redirect?entityId=27754545-7a90f904-f8ae-4810-b406-9adfd7337b6f&entityType=collection)
+
 ## Auth
 
 - header: "X-Principal"
