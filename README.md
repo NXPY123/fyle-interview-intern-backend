@@ -107,7 +107,7 @@ docker rm fyle-intern-backend-container
 
 List all assignments created by a student
 
-```json
+```
 headers:
 X-Principal: {"user_id":1, "student_id":1}
 
@@ -141,7 +141,7 @@ response:
 ### POST /student/assignments
 Create a new assignment
 
-```json
+```
 headers:
 X-Principal: {"user_id":2, "student_id":2}
 
@@ -168,7 +168,7 @@ response:
 ### POST /student/assignments
 Edit an assignment
 
-```json
+```
 headers:
 X-Principal: {"user_id":2, "student_id":2}
 
@@ -196,7 +196,7 @@ response:
 ### POST /student/assignments/submit
 Submit an assignment
 
-```json
+```
 headers:
 X-Principal: {"user_id":1, "student_id":1}
 
@@ -224,7 +224,7 @@ response:
 ### GET /teacher/assignments
 List all assignments submitted to this teacher
 
-```json 
+```
 headers:
 X-Principal: {"user_id":3, "teacher_id":1}
 
@@ -248,7 +248,7 @@ response:
 ### POST /teacher/assignments/grade
 Grade an assignment
 
-```json
+```
 headers:
 X-Principal: {"user_id":3, "teacher_id":1}
 
@@ -276,7 +276,7 @@ response:
 ### GET /principal/assignments
 List all submitted and graded assignments
 
-```json
+```
 headers:
 X-Principal: {"user_id":5, "principal_id":1}
 
@@ -300,7 +300,7 @@ response:
 ### GET /principal/teachers
 List all the teachers
 
-```json
+```
 headers:
 X-Principal: {"user_id":5, "principal_id":1}
 
@@ -321,7 +321,7 @@ response:
 ### POST /principal/assignments/grade
 Re-grade an assignment
 
-```json
+```
 headers:
 X-Principal: {"user_id":5, "principal_id":1}
 
