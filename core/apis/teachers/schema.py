@@ -8,9 +8,8 @@ class TeacherSchema(SQLAlchemyAutoSchema):
         model = Teacher
         unknown = EXCLUDE
 
-    id = auto_field(required=False, allow_none=True)
-    name = auto_field()
-    email = auto_field()
+    id = auto_field(required=True)
+    user_id = auto_field(required=False, dump_only=True)
     created_at = auto_field(dump_only=True)
     updated_at = auto_field(dump_only=True)
 
