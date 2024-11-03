@@ -2,6 +2,7 @@ from core import db
 from sqlalchemy import text
 import datetime
 from core.models.teachers import Teacher
+from core.apis.teachers.schema import TeacherSchema
 
 
 def test_get_assignments_teacher_1(client, h_teacher_1):
@@ -133,6 +134,22 @@ def test_teacher_model(client):
     assert len(teachers) == 2
 
     teacher = teachers[0]
+    assert teacher.id == 1
+    assert teacher.user_id == 3
+    assert isinstance(teacher.created_at, datetime.datetime)
+    assert isinstance(teacher.updated_at, datetime.datetime)
+
+
+def test_teacher_schema_initiate_class():
+
+    teacher_data = {
+        "id": 1,
+        "user_id": 3,
+        "created_at": datetime.datetime.now(),
+        "updated_at": datetime.datetime.now(),
+    }
+
+    teacher = TeacherSchema().initiate_class(teacher_data, False, False)
     assert teacher.id == 1
     assert teacher.user_id == 3
     assert isinstance(teacher.created_at, datetime.datetime)
