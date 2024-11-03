@@ -57,37 +57,48 @@ ruff check --fix
 
 ## To run the project in docker, follow the steps below:
 
-### Build Docker Image
+### Using Docker Compose
+
+```
+docker-compose up --build   
+```
+The server will be running on http://localhost:6000
+
+### Using Docker
+
+##### Build Docker Image
 
 ```
 docker build -t fyle-intern-backend .
 ```
 
-### Run Docker Container
+##### Run Docker Container
 
 ```
 docker run -d --name fyle-intern-backend-container -p 5000:5000 fyle-intern-backend
 ```
 
-### Run Tests
+The server exposes port 5000. You can access the server at http://localhost:5000
+
+##### Run Tests
 
 ```
-ocker exec fyle-intern-backend-container pytest --cov -vvv -s tests/
+docker exec fyle-intern-backend-container pytest --cov -vvv -s tests/
 ```
 
-### Format Code
+##### Format Code
 
 ```
 docker exec fyle-intern-backend-container python -m black . --check
 ```
 
-### Lint Code
+##### Lint Code
 
 ```
 docker exec fyle-intern-backend-container ruff check . --fix
 ```
 
-### Stop and Remove Docker Container
+##### Stop and Remove Docker Container
 
 ```
 docker stop fyle-intern-backend-container
@@ -147,7 +158,8 @@ X-Principal: {"user_id":2, "student_id":2}
 
 payload:
 {
-    "content": "some text"
+    "content": "some text",
+    "teacher_id": 1
 }
 
 response:
