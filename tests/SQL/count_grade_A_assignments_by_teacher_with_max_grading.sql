@@ -5,6 +5,7 @@ WITH TotalGrades AS (
         COUNT(*) AS total_count
     FROM 
         assignments
+    WHERE state = "GRADED"
     GROUP BY 
         teacher_id
 ),
